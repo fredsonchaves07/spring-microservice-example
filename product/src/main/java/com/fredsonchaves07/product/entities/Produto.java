@@ -14,9 +14,12 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private final String descricao;
+    private String descricao;
 
-    private final BigDecimal valor;
+    private BigDecimal valor;
+
+    @Deprecated
+    public Produto() {}
 
     public Produto(@NonNull String descricao, BigDecimal valor) {
         this.descricao = Objects.requireNonNull(descricao);
