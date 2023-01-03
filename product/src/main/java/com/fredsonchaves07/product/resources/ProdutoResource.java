@@ -2,29 +2,40 @@ package com.fredsonchaves07.product.resources;
 
 import com.fredsonchaves07.product.dtos.ProdutoCriacaoDTO;
 import com.fredsonchaves07.product.dtos.ProdutoDTO;
-import com.fredsonchaves07.product.services.ProdutoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import javax.validation.Valid;
 
-@RestController
-@RequestMapping("produto")
-public class ProdutoResource {
-
-    @Autowired
-    ProdutoService produtoService;
+public interface ProdutoResource {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProdutoDTO inserir(@RequestBody ProdutoCriacaoDTO produtoDTO) {
-        return produtoService.inserir(produtoDTO);
-    }
+    ProdutoDTO inserir(@Valid @RequestBody ProdutoCriacaoDTO produtoDTO);
 
     @GetMapping("{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProdutoDTO buscarPorId(@PathVariable Long id) {
-        return produtoService.buscarPorId(id);
-    }
+    @Operation(summary = "Retorna o produto")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "404",
+                    content = @Content(
+                           mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    value = """
+                                            {
+                                                "Código": "115",
+                                                "mensagem: "Produto nao encontrado"
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    ProdutoDTO buscarPorId(@PathVariable Long id);
 }
